@@ -1,0 +1,17 @@
+/* You can add global styles to this file, and also import other style files */
+html, body {
+  margin: 0;
+  padding: 0;
+
+  font-family: 'Titillium Web', sans-serif;
+
+  background: url(./assets/bg.jpg);
+  background-repeat: repeat;
+
+  color: #424242;
+}
+
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+// Overwrite default mat-drawer-container background color
+.mat-sidenav-container { background-color: rgba($color: #000000, $alpha: 0.0); }

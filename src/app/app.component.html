@@ -1,0 +1,28 @@
+<div id="page">
+    <div id="nav">
+        <mat-toolbar color="primary">
+          <button mat-button (click)="sidenav.toggle()"><mat-icon>{{menuIconName}}</mat-icon></button>
+          <span id="application-title">Casino Helper</span>
+
+          <!-- This fills the remaining space of the current row -->
+          <span class="example-fill-remaining-space"></span>
+
+          <!--<span>Right Aligned Text</span>-->
+        </mat-toolbar>
+      </div>
+  <mat-sidenav-container id="container" fullscreen >
+    <mat-sidenav id="sidenav" #sidenav [(opened)]="opened">
+      <a routerLink="home"><button class="nav-link" mat-flat-button><mat-icon>home</mat-icon> Home</button></a><br>
+      <a routerLink="settings"><button class="nav-link" mat-flat-button><mat-icon>settings</mat-icon> Settings</button></a>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <div id="main-content">
+        <div id="site-container">
+          <router-outlet></router-outlet>
+          <div id="footer">&copy; 2019 Nico Enking | Background image provided by <a href="#" (click)="openFreepikLink($event)">kjpargeter@freepik.com</a></div>
+        </div>
+      </div>
+
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

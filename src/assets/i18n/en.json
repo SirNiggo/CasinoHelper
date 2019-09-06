@@ -1,0 +1,10 @@
+{
+  "PAGES": {
+      "HOME": {
+          "TITLE": "Home"
+      },
+      "SETTINGS": {
+        "TITLE": "Settings"
+      }
+  }
+}
