@@ -8,10 +8,10 @@ import { SlotEntity } from "./entities/slot.entity";
   providedIn: "root"
 })
 export class DatabaseService {
-  public connection: Connection;
+  public connection: Promise<Connection> = null;
 
   constructor() {
-    createConnection({
+    this.connection = createConnection({
       type: "sqlite",
       database: "./data/db.sqlite",
       synchronize: true,
@@ -20,36 +20,21 @@ export class DatabaseService {
       entities: ["./entities/**/*.entity.ts"]
       //migrations: ["src/app/core/typeorm/migrations/**/*.migration.ts"],
       //subscribers: ["src/app/core/typeorm/subscribers/**/*.subscriber.ts"]
-    })
-      .then(con => {
-        console.log(`Database successfully initialized.`);
-        this.connection = con;
-      })
-      .catch(err => {
-        throw new Error(
-          `An error occured while trying to initalize the database connection:\n${err}`
-        );
-      });
+    });
   }
 
-  getCasinoRepository(): Repository<CasinoEntity> {
-    if (this.connection === null) {
-      throw new Error(`Can not create a repository when the connection is not initialized!`);
-    }
-    return this.connection.getRepository(CasinoEntity);
+  async getCasinoRepository(): Promise<Repository<CasinoEntity>> {
+    const con = await this.connection;
+    return con.getRepository(CasinoEntity);
   }
 
-  getProviderRepository(): Repository<ProviderEntity> {
-    if (this.connection === null) {
-      throw new Error(`Can not create a repository when the connection is not initialized!`);
-    }
-    return this.connection.getRepository(ProviderEntity);
+  async getProviderRepository(): Promise<Repository<ProviderEntity>> {
+    const con = await this.connection;
+    return con.getRepository(ProviderEntity);
   }
 
-  getSlotRepository(): Repository<SlotEntity> {
-    if (this.connection === null) {
-      throw new Error(`Can not create a repository when the connection is not initialized!`);
-    }
-    return this.connection.getRepository(SlotEntity);
+  async getSlotRepository(): Promise<Repository<SlotEntity>> {
+    const con = await this.connection;
+    return con.getRepository(SlotEntity);
   }
 }

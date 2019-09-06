@@ -16,24 +16,30 @@ export class CasinoService {
     private databaseService: DatabaseService
   ) {
     // Populate the initial _casinos BehaviourSubject with data from the database
-    this.databaseService.getCasinoRepository().find()
-      .then((casinos) => {
-        this._casinos.next(casinos);
-      });
+    this.databaseService.getCasinoRepository().then((repo) => {
+      return repo.find()
+    })
+    .then((casinos) => {
+      this._casinos.next(casinos);
+    });
   }
 
   saveCasino(casino: CasinoEntity): void {
-    this.databaseService.getCasinoRepository().save(casino)
-      .then((newCasino) => {
-        this._casinos.next(addToArray(this._casinos.getValue(), newCasino));
-      });
+    this.databaseService.getCasinoRepository().then((repo) => {
+      return repo.save(casino)
+    })
+    .then((newCasino) => {
+      this._casinos.next(addToArray(this._casinos.getValue(), newCasino));
+    });
   }
 
   removeCasino(casino: CasinoEntity): void {
-    this.databaseService.getCasinoRepository().remove(casino)
-      .then((removedCasino) => {
-        this._casinos.next(removeInArrayById(this._casinos.getValue(), removedCasino.id));
-      });
+    this.databaseService.getCasinoRepository().then((repo) => {
+      return repo.remove(casino)
+    })
+    .then((removedCasino) => {
+      this._casinos.next(removeInArrayById(this._casinos.getValue(), removedCasino.id));
+    });
   }
 
   findCasino(id: number): CasinoEntity {

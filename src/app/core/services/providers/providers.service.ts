@@ -16,24 +16,30 @@ export class ProviderService {
     private databaseService: DatabaseService
   ) {
     // Populate the initial _providers BehaviourSubject with data from the database
-    this.databaseService.getProviderRepository().find()
-      .then((providers) => {
-        this._providers.next(providers);
-      });
+    this.databaseService.getProviderRepository().then((repo) => {
+      return repo.find()
+    })
+    .then((providers) => {
+      this._providers.next(providers);
+    });
   }
 
   saveProvider(provider: ProviderEntity): void {
-    this.databaseService.getProviderRepository().save(provider)
-      .then((newProvider) => {
-        this._providers.next(addToArray(this._providers.getValue(), newProvider));
-      });
+    this.databaseService.getProviderRepository().then((repo) => {
+      return repo.save(provider)
+    })
+    .then((newProvider) => {
+      this._providers.next(addToArray(this._providers.getValue(), newProvider));
+    });
   }
 
   removeProvider(provider: ProviderEntity): void {
-    this.databaseService.getProviderRepository().remove(provider)
-      .then((removedProvider) => {
-        this._providers.next(removeInArrayById(this._providers.getValue(), removedProvider.id));
-      });
+    this.databaseService.getProviderRepository().then((repo) => {
+      return repo.remove(provider)
+    })
+    .then((removedProvider) => {
+      this._providers.next(removeInArrayById(this._providers.getValue(), removedProvider.id));
+    });
   }
 
   findProvider(id: number): ProviderEntity {

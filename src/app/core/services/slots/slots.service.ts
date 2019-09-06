@@ -16,24 +16,30 @@ export class SlotService {
     private databaseService: DatabaseService
   ) {
     // Populate the initial _slots BehaviourSubject with data from the database
-    this.databaseService.getSlotRepository().find()
-      .then((slots) => {
-        this._slots.next(slots);
-      });
+    this.databaseService.getSlotRepository().then((repo) => {
+      return repo.find()
+    })
+    .then((slots) => {
+      this._slots.next(slots);
+    });
   }
 
   saveSlot(slot: SlotEntity): void {
-    this.databaseService.getSlotRepository().save(slot)
-      .then((newSlot) => {
-        this._slots.next(addToArray(this._slots.getValue(), newSlot));
-      });
+    this.databaseService.getSlotRepository().then((repo) => {
+      return repo.save(slot)
+    })
+    .then((newSlot) => {
+      this._slots.next(addToArray(this._slots.getValue(), newSlot));
+    });
   }
 
   removeSlot(slot: SlotEntity): void {
-    this.databaseService.getSlotRepository().remove(slot)
-      .then((removedSlot) => {
-        this._slots.next(removeInArrayById(this._slots.getValue(), removedSlot.id));
-      });
+    this.databaseService.getSlotRepository().then((repo) => {
+      return repo.remove(slot)
+    })
+    .then((removedSlot) => {
+      this._slots.next(removeInArrayById(this._slots.getValue(), removedSlot.id));
+    });
   }
 
   findSlot(id: number): SlotEntity {
