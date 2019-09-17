@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { DatabaseService } from "../database/database.service";
-import { ProviderEntity } from '../database/entities/provider.entity';
+import { ProviderEntity } from '../../../../../ipcDatabase/entities/provider.entity';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { removeInArrayById, findObjectInArrayById, addToArray } from '../helpers/util';
+import { ipcRenderer } from "electron";
 
 @Injectable({
   providedIn: 'root'
@@ -13,33 +13,37 @@ export class ProviderService {
   public readonly providers: Observable<ProviderEntity[]> = this._providers.asObservable();
 
   constructor(
-    private databaseService: DatabaseService
   ) {
-    // Populate the initial _providers BehaviourSubject with data from the database
-    this.databaseService.getProviderRepository().then((repo) => {
-      return repo.find()
-    })
-    .then((providers) => {
+    this.createListeners();
+  }
+
+  private createListeners() {
+    // Listen to providers collection refreshes
+    ipcRenderer.on('providerList', (event, providers) => {
+      if (providers instanceof Error)
+        throw providers;
       this._providers.next(providers);
     });
+    // Request the current providers collection from main thread
+    ipcRenderer.send('getProviders');
+
+    // React to a providerSaved event
+    ipcRenderer.on('providerSaved', (event, savedProvider) => {
+      this._providers.next(addToArray(this._providers.getValue(), savedProvider));
+    });
+
+    // React to a slotRemoved event
+    ipcRenderer.on('providerRemoved', (event, removedProvider) => {
+      this._providers.next(removeInArrayById(this._providers.getValue(), removedProvider.id).newArray);
+    })
   }
 
   saveProvider(provider: ProviderEntity): void {
-    this.databaseService.getProviderRepository().then((repo) => {
-      return repo.save(provider)
-    })
-    .then((newProvider) => {
-      this._providers.next(addToArray(this._providers.getValue(), newProvider));
-    });
+    ipcRenderer.send('saveProvider', provider);
   }
 
   removeProvider(provider: ProviderEntity): void {
-    this.databaseService.getProviderRepository().then((repo) => {
-      return repo.remove(provider)
-    })
-    .then((removedProvider) => {
-      this._providers.next(removeInArrayById(this._providers.getValue(), removedProvider.id));
-    });
+    ipcRenderer.send('removeProvider', provider);
   }
 
   findProvider(id: number): ProviderEntity {

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { DatabaseService } from "../database/database.service";
-import { SlotEntity } from '../database/entities/slot.entity';
+import { SlotEntity } from '../../../../../ipcDatabase/entities/slot.entity';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { removeInArrayById, findObjectInArrayById, addToArray } from '../helpers/util';
+import { ipcRenderer } from "electron";
 
 @Injectable({
   providedIn: 'root'
@@ -13,33 +13,37 @@ export class SlotService {
   public readonly slots: Observable<SlotEntity[]> = this._slots.asObservable();
 
   constructor(
-    private databaseService: DatabaseService
   ) {
-    // Populate the initial _slots BehaviourSubject with data from the database
-    this.databaseService.getSlotRepository().then((repo) => {
-      return repo.find()
-    })
-    .then((slots) => {
+    this.createListeners();
+  }
+
+  private createListeners() {
+    // Listen to slots collection refreshes
+    ipcRenderer.on('slotList', (event, slots) => {
+      if (slots instanceof Error)
+        throw slots;
       this._slots.next(slots);
     });
+    // Request the current slots collection from main thread
+    ipcRenderer.send('getSlots');
+
+    // React to a slotSaved event
+    ipcRenderer.on('slotSaved', (event, savedSlot) => {
+      this._slots.next(addToArray(this._slots.getValue(), savedSlot));
+    });
+
+    // React to a slotRemoved event
+    ipcRenderer.on('slotRemoved', (event, removedSlot) => {
+      this._slots.next(removeInArrayById(this._slots.getValue(), removedSlot.id).newArray);
+    })
   }
 
   saveSlot(slot: SlotEntity): void {
-    this.databaseService.getSlotRepository().then((repo) => {
-      return repo.save(slot)
-    })
-    .then((newSlot) => {
-      this._slots.next(addToArray(this._slots.getValue(), newSlot));
-    });
+    ipcRenderer.send('saveSlot', slot);
   }
 
   removeSlot(slot: SlotEntity): void {
-    this.databaseService.getSlotRepository().then((repo) => {
-      return repo.remove(slot)
-    })
-    .then((removedSlot) => {
-      this._slots.next(removeInArrayById(this._slots.getValue(), removedSlot.id));
-    });
+    ipcRenderer.send('removeSlot', slot);
   }
 
   findSlot(id: number): SlotEntity {
