@@ -1,7 +1,7 @@
 import { Connection } from "typeorm";
 import { ipcMain } from "electron";
 import { SlotEntity } from "../entities/slot.entity";
-import { WinstonLogger } from "../../logger";
+import { WinstonLogger } from "../../logger/WinstonLogger";
 
 export class SlotsManager {
   private connection: Connection;

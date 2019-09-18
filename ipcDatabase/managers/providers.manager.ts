@@ -1,7 +1,7 @@
 import { Connection } from "typeorm";
 import { ipcMain } from "electron";
 import { ProviderEntity } from "../entities/provider.entity";
-import { WinstonLogger } from "../../logger";
+import { WinstonLogger } from "../../logger/WinstonLogger";
 
 export class ProvidersManager {
   private connection: Connection;

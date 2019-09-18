@@ -37,10 +37,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var electron_1 = require("electron");
 var provider_entity_1 = require("../entities/provider.entity");
-var logger_1 = require("../../logger");
+var WinstonLogger_1 = require("../../logger/WinstonLogger");
 var ProvidersManager = /** @class */ (function () {
     function ProvidersManager(connection) {
-        this.logger = logger_1.WinstonLogger.getInstance();
+        this.logger = WinstonLogger_1.WinstonLogger.getInstance();
         this.connection = connection;
         this.initializeListeners();
     }

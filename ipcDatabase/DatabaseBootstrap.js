@@ -39,10 +39,11 @@ var typeorm_1 = require("typeorm");
 var casinos_manager_1 = require("./managers/casinos.manager");
 var providers_manager_1 = require("./managers/providers.manager");
 var slots_manager_1 = require("./managers/slots.manager");
-var logger_1 = require("../logger");
+var WinstonLogger_1 = require("../logger/WinstonLogger");
+var TypeOrmLogger_1 = require("../logger/TypeOrmLogger");
 var DatabaseBootstrap = /** @class */ (function () {
     function DatabaseBootstrap() {
-        this.logger = logger_1.WinstonLogger.getInstance();
+        this.logger = WinstonLogger_1.WinstonLogger.getInstance();
     }
     DatabaseBootstrap.prototype.initialize = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -57,7 +58,7 @@ var DatabaseBootstrap = /** @class */ (function () {
                                 database: "./data/db.sqlite",
                                 synchronize: true,
                                 logging: true,
-                                logger: "advanced-console",
+                                logger: new TypeOrmLogger_1.TypeOrmLogger(),
                                 entities: ["./entities/**/*.entity.ts"]
                                 //migrations: ["src/app/core/typeorm/migrations/**/*.migration.ts"],
                                 //subscribers: ["src/app/core/typeorm/subscribers/**/*.subscriber.ts"]

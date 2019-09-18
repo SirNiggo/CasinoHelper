@@ -37,27 +37,23 @@ export class WinstonLogger {
     return WinstonLogger.instance;
   }
 
-  public log(msg: string, context?: any) {
-    this._winstonInstance.log(msg, context);
-  }
-
-  public debug(msg: string, context?: any) {
+  public debug(msg: string, ...context: any[]) {
     this._winstonInstance.debug(msg, context);
   }
 
-  public silly(msg: string, context?: any) {
+  public silly(msg: string, ...context: any[]) {
     this._winstonInstance.silly(msg, context);
   }
 
-  public info(msg: string, context?: any) {
+  public info(msg: string, ...context: any[]) {
     this._winstonInstance.info(msg, context);
   }
 
-  public warn(msg: string, context?: any) {
+  public warn(msg: string, ...context: any[]) {
     this._winstonInstance.warn(msg, context);
   }
 
-  public error(msg: string, context?: any) {
+  public error(msg: string, ...context: any[]) {
     this._winstonInstance.error(msg, context);
   }
 

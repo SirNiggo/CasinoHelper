@@ -2,7 +2,8 @@ import { createConnection, Connection } from "typeorm";
 import { CasinosManager } from "./managers/casinos.manager";
 import { ProvidersManager } from "./managers/providers.manager";
 import { SlotsManager } from "./managers/slots.manager";
-import { WinstonLogger } from "../logger";
+import { WinstonLogger } from "../logger/WinstonLogger";
+import { TypeOrmLogger } from "../logger/TypeOrmLogger";
 export class DatabaseBootstrap {
   private casinosManager: CasinosManager;
   private providersManager: ProvidersManager;
@@ -21,7 +22,7 @@ export class DatabaseBootstrap {
         database: "./data/db.sqlite",
         synchronize: true,
         logging: true,
-        logger: "advanced-console",
+        logger: new TypeOrmLogger(),
         entities: ["./entities/**/*.entity.ts"]
         //migrations: ["src/app/core/typeorm/migrations/**/*.migration.ts"],
         //subscribers: ["src/app/core/typeorm/subscribers/**/*.subscriber.ts"]

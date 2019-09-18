@@ -34,25 +34,42 @@ var WinstonLogger = /** @class */ (function () {
         }
         return WinstonLogger.instance;
     };
-    WinstonLogger.prototype.log = function (msg, context) {
-        this._winstonInstance.log(msg, context);
-    };
-    WinstonLogger.prototype.debug = function (msg, context) {
+    WinstonLogger.prototype.debug = function (msg) {
+        var context = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            context[_i - 1] = arguments[_i];
+        }
         this._winstonInstance.debug(msg, context);
     };
-    WinstonLogger.prototype.silly = function (msg, context) {
+    WinstonLogger.prototype.silly = function (msg) {
+        var context = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            context[_i - 1] = arguments[_i];
+        }
         this._winstonInstance.silly(msg, context);
     };
-    WinstonLogger.prototype.info = function (msg, context) {
+    WinstonLogger.prototype.info = function (msg) {
+        var context = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            context[_i - 1] = arguments[_i];
+        }
         this._winstonInstance.info(msg, context);
     };
-    WinstonLogger.prototype.warn = function (msg, context) {
+    WinstonLogger.prototype.warn = function (msg) {
+        var context = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            context[_i - 1] = arguments[_i];
+        }
         this._winstonInstance.warn(msg, context);
     };
-    WinstonLogger.prototype.error = function (msg, context) {
+    WinstonLogger.prototype.error = function (msg) {
+        var context = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            context[_i - 1] = arguments[_i];
+        }
         this._winstonInstance.error(msg, context);
     };
     return WinstonLogger;
 }());
 exports.WinstonLogger = WinstonLogger;
-//# sourceMappingURL=logger.js.map
+//# sourceMappingURL=WinstonLogger.js.map
