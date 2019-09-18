@@ -8,7 +8,13 @@ export class SlotEntity {
   id: number;
 
   @Column()
-  name: string;
+  title: string;
+
+  @Column()
+  titleNoSpace: string;
+
+  @Column()
+  image: string;
 
   @ManyToOne('ProviderEntity', 'slots')
   provider: ProviderEntity;
