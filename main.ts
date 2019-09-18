@@ -2,12 +2,26 @@ import { app, BrowserWindow, screen } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 import { DatabaseBootstrap } from "./ipcDatabase/DatabaseBootstrap";
+import { WinstonLogger } from "./logger";
+import * as figlet from "figlet";
+
+const logger = WinstonLogger.getInstance();
+
+figlet('CasinoHelper', (err, data) => {
+  if (err) {
+    logger.error('Could not show figlet.', err);
+    return;
+  }
+  logger.info(`\n${data}`);
+});
 
 let win, serve;
 const args = process.argv.slice(1);
 serve = args.some(val => val === '--serve');
 
 function createWindow() {
+
+  logger.debug('Creating window in main thread.');
 
   const electronScreen = screen;
   const size = electronScreen.getPrimaryDisplay().workAreaSize;
@@ -42,6 +56,7 @@ function createWindow() {
 
   // Emitted when the window is closed.
   win.on('closed', () => {
+    logger.debug('Closing window.');
     // Dereference the window object, usually you would store window
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
@@ -56,6 +71,7 @@ try {
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
   app.on('ready', () => {
+    logger.debug('App is ready.');
     // Initialize Main Thread Database
     const databaseBootstrap = new DatabaseBootstrap();
     databaseBootstrap.initialize().then(() => {
@@ -65,6 +81,7 @@ try {
 
   // Quit when all windows are closed.
   app.on('window-all-closed', () => {
+    logger.debug('All windows closed.');
     // On OS X it is common for applications and their menu bar
     // to stay active until the user quits explicitly with Cmd + Q
     if (process.platform !== 'darwin') {
@@ -73,6 +90,7 @@ try {
   });
 
   app.on('activate', () => {
+    logger.debug('App activated.');
     // On OS X it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (win === null) {

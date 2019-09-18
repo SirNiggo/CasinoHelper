@@ -37,13 +37,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var electron_1 = require("electron");
 var casino_entity_1 = require("../entities/casino.entity");
+var logger_1 = require("../../logger");
 var CasinosManager = /** @class */ (function () {
     function CasinosManager(connection) {
+        this.logger = logger_1.WinstonLogger.getInstance();
         this.connection = connection;
         this.initializeListeners();
     }
     CasinosManager.prototype.initializeListeners = function () {
         var _this = this;
+        this.logger.debug('Initializing listeners for CasinoManager.');
         electron_1.ipcMain.on("saveCasino", function (event, casino) {
             _this.saveCasino(casino).then(function (savedCasino) {
                 event.reply("casinoSaved", savedCasino);
@@ -59,6 +62,7 @@ var CasinosManager = /** @class */ (function () {
                 event.reply("casinoList", casinos);
             });
         });
+        this.logger.debug('CasinoManager listeners initialized.');
     };
     CasinosManager.prototype.saveCasino = function (casino) {
         return __awaiter(this, void 0, void 0, function () {
@@ -66,6 +70,7 @@ var CasinosManager = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        this.logger.debug('Saving Casino to database.', casino);
                         if (!this.connection)
                             return [2 /*return*/, new Error("Could not get casinos. Database is not yet initialized!")];
                         _a.label = 1;
@@ -76,9 +81,11 @@ var CasinosManager = /** @class */ (function () {
                                 .save(casino)];
                     case 2:
                         savedCasino = _a.sent();
+                        this.logger.debug('Casino saved.');
                         return [2 /*return*/, savedCasino];
                     case 3:
                         err_1 = _a.sent();
+                        this.logger.debug('Failed to save casino.', err_1);
                         return [2 /*return*/, new Error("An error occured while trying to save the casino:\n" + err_1)];
                     case 4: return [2 /*return*/];
                 }
@@ -91,6 +98,7 @@ var CasinosManager = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        this.logger.debug('Removing Casino from database.', casino);
                         if (!this.connection)
                             return [2 /*return*/, new Error("Could not get casinos. Database is not yet initialized!")];
                         _a.label = 1;
@@ -101,9 +109,11 @@ var CasinosManager = /** @class */ (function () {
                                 .remove(casino)];
                     case 2:
                         removedCasino = _a.sent();
+                        this.logger.debug('Removed Casino.');
                         return [2 /*return*/, removedCasino];
                     case 3:
                         err_2 = _a.sent();
+                        this.logger.error('Could not remove Casino.', err_2);
                         return [2 /*return*/, new Error("An error occured while trying to remove the casino:\n" + err_2)];
                     case 4: return [2 /*return*/];
                 }
@@ -121,12 +131,15 @@ var CasinosManager = /** @class */ (function () {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
+                        this.logger.debug('Trying to read all Casinos from Database.');
                         return [4 /*yield*/, this.connection.getRepository(casino_entity_1.CasinoEntity).find()];
                     case 2:
                         casinos = _a.sent();
+                        this.logger.debug('Read all Casinos from Database.');
                         return [2 /*return*/, casinos];
                     case 3:
                         err_3 = _a.sent();
+                        this.logger.error('Could not read all Casinos from database.', err_3);
                         return [2 /*return*/, new Error("An error occured while trying to find all casinos:\n" + err_3)];
                     case 4: return [2 /*return*/];
                 }

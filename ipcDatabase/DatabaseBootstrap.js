@@ -39,8 +39,10 @@ var typeorm_1 = require("typeorm");
 var casinos_manager_1 = require("./managers/casinos.manager");
 var providers_manager_1 = require("./managers/providers.manager");
 var slots_manager_1 = require("./managers/slots.manager");
+var logger_1 = require("../logger");
 var DatabaseBootstrap = /** @class */ (function () {
     function DatabaseBootstrap() {
+        this.logger = logger_1.WinstonLogger.getInstance();
     }
     DatabaseBootstrap.prototype.initialize = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -49,6 +51,7 @@ var DatabaseBootstrap = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
+                        this.logger.debug('Trying to create database connection to local sqlite database.');
                         return [4 /*yield*/, typeorm_1.createConnection({
                                 type: "sqlite",
                                 database: "./data/db.sqlite",
@@ -61,13 +64,16 @@ var DatabaseBootstrap = /** @class */ (function () {
                             })];
                     case 1:
                         connection = _a.sent();
+                        this.logger.debug('Database connection established.');
+                        this.logger.debug('Initializing Database managers.');
                         this.casinosManager = new casinos_manager_1.CasinosManager(connection);
                         this.providersManager = new providers_manager_1.ProvidersManager(connection);
                         this.slotsManager = new slots_manager_1.SlotsManager(connection);
                         return [2 /*return*/, null];
                     case 2:
                         err_1 = _a.sent();
-                        throw err_1;
+                        this.logger.error('Failed to Bootstrap database connection.', err_1);
+                        return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }
             });

@@ -37,13 +37,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var electron_1 = require("electron");
 var provider_entity_1 = require("../entities/provider.entity");
+var logger_1 = require("../../logger");
 var ProvidersManager = /** @class */ (function () {
     function ProvidersManager(connection) {
+        this.logger = logger_1.WinstonLogger.getInstance();
         this.connection = connection;
         this.initializeListeners();
     }
     ProvidersManager.prototype.initializeListeners = function () {
         var _this = this;
+        this.logger.debug('Initializing listeners for ProviderManager.');
         electron_1.ipcMain.on("saveProvider", function (event, provider) {
             _this.saveProvider(provider).then(function (savedProvider) {
                 event.reply("providerSaved", savedProvider);
@@ -59,6 +62,7 @@ var ProvidersManager = /** @class */ (function () {
                 event.reply("providerList", providers);
             });
         });
+        this.logger.debug('ProviderManager listeners initialized.');
     };
     ProvidersManager.prototype.saveProvider = function (provider) {
         return __awaiter(this, void 0, void 0, function () {
@@ -66,6 +70,7 @@ var ProvidersManager = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        this.logger.debug('Saving provider to database.', provider);
                         if (!this.connection)
                             return [2 /*return*/, new Error("Could not get providers. Database is not yet initialized!")];
                         _a.label = 1;
@@ -76,9 +81,11 @@ var ProvidersManager = /** @class */ (function () {
                                 .save(provider)];
                     case 2:
                         savedProvider = _a.sent();
+                        this.logger.debug('Provider saved to database.');
                         return [2 /*return*/, savedProvider];
                     case 3:
                         err_1 = _a.sent();
+                        this.logger.error('Could not save provider to database.', err_1);
                         return [2 /*return*/, new Error("An error occured while trying to save the provider:\n" + err_1)];
                     case 4: return [2 /*return*/];
                 }
@@ -91,6 +98,7 @@ var ProvidersManager = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        this.logger.debug('Removing provider from database.', provider);
                         if (!this.connection)
                             return [2 /*return*/, new Error("Could not get providers. Database is not yet initialized!")];
                         _a.label = 1;
@@ -101,9 +109,11 @@ var ProvidersManager = /** @class */ (function () {
                                 .remove(provider)];
                     case 2:
                         removedProvider = _a.sent();
+                        this.logger.debug('Provider removed from database.');
                         return [2 /*return*/, removedProvider];
                     case 3:
                         err_2 = _a.sent();
+                        this.logger.error('Could not remove provider from database.', err_2);
                         return [2 /*return*/, new Error("An error occured while trying to remove the provider:\n" + err_2)];
                     case 4: return [2 /*return*/];
                 }
@@ -116,6 +126,7 @@ var ProvidersManager = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        this.logger.debug('Trying to read all providers from database.');
                         if (!this.connection)
                             return [2 /*return*/, new Error("Could not get providers. Database is not yet initialized!")];
                         _a.label = 1;
@@ -124,9 +135,11 @@ var ProvidersManager = /** @class */ (function () {
                         return [4 /*yield*/, this.connection.getRepository(provider_entity_1.ProviderEntity).find()];
                     case 2:
                         providers = _a.sent();
+                        this.logger.debug('Read all providers from database.');
                         return [2 /*return*/, providers];
                     case 3:
                         err_3 = _a.sent();
+                        this.logger.error('Could not read all providers from database.', err_3);
                         return [2 /*return*/, new Error("An error occured while trying to find all providers:\n" + err_3)];
                     case 4: return [2 /*return*/];
                 }
