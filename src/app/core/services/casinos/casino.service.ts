@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CasinoEntity } from '../../../../../ipcDatabase/entities/casino.entity';
+import { CasinoEntity } from '../../../../ipcDatabase/entities/casino.entity';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { removeInArrayById, findObjectInArrayById, addToArray } from '../helpers/util';
 import { ipcRenderer } from "electron";

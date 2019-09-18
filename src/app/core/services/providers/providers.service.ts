@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ProviderEntity } from '../../../../../ipcDatabase/entities/provider.entity';
+import { ProviderEntity } from '../../../../ipcDatabase/entities/provider.entity';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { removeInArrayById, findObjectInArrayById, addToArray } from '../helpers/util';
 import { ipcRenderer } from "electron";

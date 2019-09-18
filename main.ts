@@ -1,8 +1,8 @@
 import { app, BrowserWindow, screen } from "electron";
 import * as path from "path";
 import * as url from "url";
-import { DatabaseBootstrap } from "./ipcDatabase/DatabaseBootstrap";
-import { WinstonLogger } from "./logger/WinstonLogger";
+import { DatabaseBootstrap } from "./src/ipcDatabase/DatabaseBootstrap";
+import { WinstonLogger } from "./src/logger/WinstonLogger";
 import * as figlet from "figlet";
 
 const logger = WinstonLogger.getInstance();
