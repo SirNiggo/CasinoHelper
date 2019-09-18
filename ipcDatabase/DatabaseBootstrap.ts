@@ -4,6 +4,7 @@ import { ProvidersManager } from "./managers/providers.manager";
 import { SlotsManager } from "./managers/slots.manager";
 import { WinstonLogger } from "../logger/WinstonLogger";
 import { TypeOrmLogger } from "../logger/TypeOrmLogger";
+import * as path from "path";
 export class DatabaseBootstrap {
   private casinosManager: CasinosManager;
   private providersManager: ProvidersManager;
@@ -23,7 +24,7 @@ export class DatabaseBootstrap {
         synchronize: true,
         logging: true,
         logger: new TypeOrmLogger(),
-        entities: ["./entities/**/*.entity.ts"]
+        entities: [path.join(__dirname, "./entities/**/*.entity.js")]
         //migrations: ["src/app/core/typeorm/migrations/**/*.migration.ts"],
         //subscribers: ["src/app/core/typeorm/subscribers/**/*.subscriber.ts"]
       });

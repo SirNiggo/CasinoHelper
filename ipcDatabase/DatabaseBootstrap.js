@@ -41,6 +41,7 @@ var providers_manager_1 = require("./managers/providers.manager");
 var slots_manager_1 = require("./managers/slots.manager");
 var WinstonLogger_1 = require("../logger/WinstonLogger");
 var TypeOrmLogger_1 = require("../logger/TypeOrmLogger");
+var path = require("path");
 var DatabaseBootstrap = /** @class */ (function () {
     function DatabaseBootstrap() {
         this.logger = WinstonLogger_1.WinstonLogger.getInstance();
@@ -59,7 +60,7 @@ var DatabaseBootstrap = /** @class */ (function () {
                                 synchronize: true,
                                 logging: true,
                                 logger: new TypeOrmLogger_1.TypeOrmLogger(),
-                                entities: ["./entities/**/*.entity.ts"]
+                                entities: [path.join(__dirname, "./entities/**/*.entity.js")]
                                 //migrations: ["src/app/core/typeorm/migrations/**/*.migration.ts"],
                                 //subscribers: ["src/app/core/typeorm/subscribers/**/*.subscriber.ts"]
                             })];
